@@ -1,0 +1,85 @@
+<mxfile host="app.diagrams.net" modified="2026-11-01T00:00:00.000Z" agent="Claude Code" version="24.7.17" type="device">
+  <diagram name="LAMP compose architecture" id="lamp-compose-arch">
+    <mxGraphModel dx="1400" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1140" pageHeight="560" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- compose project boundary (client is outside: it is not part of the stack) -->
+        <mxCell id="composeGroup" value="docker-compose проєкт" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;verticalAlign=top;align=left;spacingLeft=14;spacingTop=8;fillColor=none;strokeColor=#8C8C8C;dashed=1;fontSize=14;fontStyle=1;fontColor=#323130;" vertex="1" parent="1">
+          <mxGeometry x="150" y="120" width="960" height="400" as="geometry" />
+        </mxCell>
+
+        <!-- main horizontal axis: y = 320 (client, lb, scale set, db are all centred on it) -->
+        <mxCell id="client" value="Клієнт / браузер" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://icons.diagrams.net/assets/azure/1/Users.svg;labelPerimeter=1;fontSize=12;fontColor=#201F1E;" vertex="1" parent="1">
+          <mxGeometry x="20" y="265" width="93.86" height="110" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lb" value="lb: nginx&#10;(load balancer)&#10;port 8081 → 80" style="image;aspect=fixed;html=1;align=center;verticalAlign=top;verticalLabelPosition=bottom;fontSize=12;fontStyle=1;fontColor=#201F1E;labelBackgroundColor=#ffffff;image=img/lib/azure2/networking/Load_Balancer_Hub.svg;" vertex="1" parent="1">
+          <mxGeometry x="200" y="290" width="60" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="scaleSet" value="scale set (3 однакові репліки)" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;verticalAlign=top;align=center;fillColor=#EFF6FC;strokeColor=#5B9BD5;fontStyle=1;fontSize=13;fontColor=#201F1E;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="360" y="160" width="200" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="app1" value="opencart1&#10;Apache + PHP 8.3" style="image;aspect=fixed;html=1;align=center;verticalAlign=top;verticalLabelPosition=bottom;fontSize=11;fontColor=#201F1E;image=img/lib/azure2/app_services/App_Services.svg;" vertex="1" parent="1">
+          <mxGeometry x="430" y="200" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="app2" value="opencart2&#10;Apache + PHP 8.3" style="image;aspect=fixed;html=1;align=center;verticalAlign=top;verticalLabelPosition=bottom;fontSize=11;fontColor=#201F1E;image=img/lib/azure2/app_services/App_Services.svg;" vertex="1" parent="1">
+          <mxGeometry x="430" y="290" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="app3" value="opencart3&#10;Apache + PHP 8.3" style="image;aspect=fixed;html=1;align=center;verticalAlign=top;verticalLabelPosition=bottom;fontSize=11;fontColor=#201F1E;image=img/lib/azure2/app_services/App_Services.svg;" vertex="1" parent="1">
+          <mxGeometry x="430" y="380" width="60" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- data column: db on the main axis (y=320), volume on a second axis (y=440) -->
+        <mxCell id="db" value="db: mysql:8.0" style="image;aspect=fixed;html=1;align=center;verticalAlign=top;verticalLabelPosition=bottom;fontSize=12;fontStyle=1;fontColor=#201F1E;labelBackgroundColor=#ffffff;image=img/lib/azure2/databases/Azure_Database_MySQL_Server.svg;" vertex="1" parent="1">
+          <mxGeometry x="700" y="290" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="vol" value="shared_config&#10;(named volume)" style="image;aspect=fixed;html=1;align=center;verticalAlign=top;verticalLabelPosition=bottom;fontSize=11;fontColor=#201F1E;labelBackgroundColor=#ffffff;image=img/lib/azure2/storage/Storage_Accounts.svg;" vertex="1" parent="1">
+          <mxGeometry x="700" y="410" width="60" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- install job sits to the right, centred between db and vol (y=380) -->
+        <mxCell id="install" value="install&#10;(one-shot job)&#10;cli_install.php" style="image;aspect=fixed;html=1;align=center;verticalAlign=top;verticalLabelPosition=bottom;fontSize=12;fontStyle=1;fontColor=#201F1E;labelBackgroundColor=#ffffff;image=img/lib/azure2/compute/Batch_Accounts.svg;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="350" width="60" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- straight edges along the axes -->
+        <mxCell id="e_client_lb" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeColor=#595959;strokeWidth=1.5;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="client" target="lb">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_lb_scaleSet" value="round-robin" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;fontColor=#323130;labelBackgroundColor=#ffffff;strokeColor=#595959;strokeWidth=1.5;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="lb" target="scaleSet">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_scaleSet_db" value="запити до БД" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;fontColor=#323130;labelBackgroundColor=#ffffff;strokeColor=#595959;strokeWidth=1.5;endArrow=block;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="scaleSet" target="db">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_scaleSet_vol" value="читання конфігу&#10;(read-only)" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;fontColor=#323130;labelBackgroundColor=#ffffff;strokeColor=#808080;strokeWidth=1.5;dashed=1;endArrow=block;endFill=1;exitX=1;exitY=0.875;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="scaleSet" target="vol">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- install fans out through one vertical trunk at x=920 -->
+        <mxCell id="e_install_db" value="1. створює схему" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;fontColor=#323130;labelBackgroundColor=#ffffff;strokeColor=#595959;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="install" target="db">
+          <mxGeometry x="0.45" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="920" y="380" />
+              <mxPoint x="920" y="320" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_install_vol" value="2. пише config.php" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;fontColor=#323130;labelBackgroundColor=#ffffff;strokeColor=#595959;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="install" target="vol">
+          <mxGeometry x="0.45" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="920" y="380" />
+              <mxPoint x="920" y="440" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

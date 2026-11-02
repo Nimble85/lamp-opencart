@@ -1,0 +1,70 @@
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: opencart_root_pw
+      MYSQL_DATABASE: opencart
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  install:
+    build: ./app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      MYSQL_HOST: db
+      MYSQL_ROOT_PASSWORD: opencart_root_pw
+      MYSQL_DATABASE: opencart
+      OC_ADMIN_USER: admin
+      OC_ADMIN_PASS: AdminPass123!
+      OC_ADMIN_EMAIL: admin@example.com
+      OC_HTTP_SERVER: "http://localhost:8081/"
+    entrypoint: ["/install-once.sh"]
+    volumes:
+      - shared_config:/shared-config
+    restart: "no"
+
+  opencart1:
+    build: ./app
+    depends_on:
+      install:
+        condition: service_completed_successfully
+    volumes:
+      - shared_config:/shared-config:ro
+
+  opencart2:
+    build: ./app
+    depends_on:
+      install:
+        condition: service_completed_successfully
+    volumes:
+      - shared_config:/shared-config:ro
+
+  opencart3:
+    build: ./app
+    depends_on:
+      install:
+        condition: service_completed_successfully
+    volumes:
+      - shared_config:/shared-config:ro
+
+  lb:
+    image: nginx:alpine
+    depends_on:
+      - opencart1
+      - opencart2
+      - opencart3
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "8081:80"
+
+volumes:
+  db_data:
+  shared_config:
